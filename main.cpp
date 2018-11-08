@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
             b.set(i, j, 1);
         }
     }
+    /*
     Matrix<int> d(2,2);
     d.set(0,1,2);
     d.printMatrix();
@@ -28,7 +29,18 @@ int main(int argc, char *argv[]) {
     cout << endl;
     d= d.transposed();
     d.printMatrix();
+     */
+    a.printMatrix();
+    cout << endl;
 
+    Matrix<int> e(4,1);
+    for (int i =0; i<4; i++){
+        e.set(i,0,1);
+    }
+    e.printMatrix();
+    e=(a*e);
+    cout << endl;
+    e.printMatrix();
 
 
 
