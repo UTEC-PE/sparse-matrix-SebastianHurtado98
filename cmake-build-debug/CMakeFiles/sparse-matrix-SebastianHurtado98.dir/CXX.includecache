@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/sebastian/UTEC-CS/ADS/SparseMatrix/main.cpp
+iostream
+-
+matrix.h
+/home/sebastian/UTEC-CS/ADS/SparseMatrix/matrix.h
+
+/home/sebastian/UTEC-CS/ADS/SparseMatrix/matrix.h
+node.h
+/home/sebastian/UTEC-CS/ADS/SparseMatrix/node.h
+iostream
+-
+
+/home/sebastian/UTEC-CS/ADS/SparseMatrix/node.h
+

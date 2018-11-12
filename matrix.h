@@ -77,7 +77,9 @@ public:
 
     };
     T operator()(int x, int y) {
-        if(x<rows && y<columns) {
+        try {
+            if (x >= rows || y >= columns) throw "Fuera de rango";
+
             auto tempRow = hRows;
             for (int i = 0; i < x; i++) {
                 tempRow = tempRow->down;
@@ -92,22 +94,23 @@ public:
                     tempRow = tempRow->next;
                 }
             }
-        return 0;
-        }
-        cout << "Fuera de rango";
-        return NULL;
+            return 0;
+        } catch(const char* exception) {cout << "Error, " << exception << endl;}
+
     };
 
     void set(int x, int y, T data) {
-        if (x < rows && y < columns) {
+
+        try {
+            if (x >= rows || y >= columns) throw "Escapa del rango";
             auto tempRow = hRows;
             auto tempColumn = hColumns;
             Node<T> *tempElement = new Node<T>;
             tempElement->x = x;
             tempElement->y = y;
             tempElement->data = data;
-            tempElement->next= nullptr;
-            tempElement->down= nullptr;
+            tempElement->next = nullptr;
+            tempElement->down = nullptr;
 
             for (int i = 0; i < x; i++) {
                 tempRow = tempRow->down;
@@ -168,7 +171,7 @@ public:
                     }
                 }
             }
-        } else { cout << "Escapa del rango"; }
+        } catch(const char* exception) {cout << "Error, " << exception << endl;}
 
     };
 
@@ -176,25 +179,23 @@ public:
 
 
     Matrix<T>& operator*(Matrix<T> &other){
-        T newElement;
-        if(columns==other.rows){
-            Matrix<T>* newMatrix= new Matrix<T>(rows, other.columns);
-            for (int i=0; i<rows; i++){
-                for(int j=0; j<other.columns; j++){
-                    newElement=0;
-                    for(int k=0; k<columns; k++){
-                        newElement= newElement + ((this->operator()(i,k)) * (other.operator()(k,j)));
+        try {
+            if (columns != other.rows) throw "matrices no compatibles";
+            T newElement;
+            Matrix<T> *newMatrix = new Matrix<T>(rows, other.columns);
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < other.columns; j++) {
+                    newElement = 0;
+                    for (int k = 0; k < columns; k++) {
+                        newElement = newElement + ((this->operator()(i, k)) * (other.operator()(k, j)));
                     }
-                    newMatrix->set(i,j, newElement);
+                    newMatrix->set(i, j, newElement);
                 }
             }
 
             return *newMatrix;
-        }
-        else{
-            cout << "Incompatible";
-            return *this;
-        }
+
+        } catch (const char* error) {cout << "Error, " << error << endl;}
 
     };
 
@@ -218,8 +219,8 @@ public:
     };
     Matrix<T>& operator+(Matrix<T>& other){
 
-        if(rows== other.rows && columns==other.columns) {
-
+        try {
+            if (rows != other.rows || columns != other.columns) throw "no son compatibles";
             Matrix<T> *newMatrix = new Matrix<T>(rows, columns);
 
             T newElement;
@@ -232,56 +233,53 @@ public:
                 }
             }
             return *newMatrix;
-        }
-        cout << "Incompatible";
-        return *this;
+
+        } catch (const char* error) {cout << "Error, " << error << endl;}
 
     };
 
     Matrix<T>& operator-(Matrix<T>& other){
 
-        if(rows== other.rows && columns==other.columns) {
-            Matrix<T> *newMatrix = new Matrix<T>(rows, columns);
-            T newElement;
-            for (int i = 0; i < rows; i++) {
-                for (int j = 0; j < columns; j++) {
-                    newElement = operator()(i, j) - other(i, j);
-                    if (newElement != 0) {
-                        newMatrix->set(i, j, newElement);
+        try {
+            if (rows != other.rows || columns != other.columns) throw "no son compatibles";
+                Matrix<T> *newMatrix = new Matrix<T>(rows, columns);
+                T newElement;
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < columns; j++) {
+                        newElement = operator()(i, j) - other(i, j);
+                        if (newElement != 0) {
+                            newMatrix->set(i, j, newElement);
+                        }
                     }
                 }
-            }
-            return *newMatrix;
-        }
-        cout << "Incompatible";
-        return *this;
+                return *newMatrix;
+        } catch(const char* error) {cout << "Error, " << error << endl;}
+
     };
 
     Matrix<T>& transposed(){
-
-        if(columns== rows){
-            Matrix<T>* newMatrix= new Matrix<T>(rows, columns);
-            auto tempRow= hRows;
-            auto tempElement= tempRow;
-            for (int i=0; i<rows; i++){
-                tempElement= tempRow->next;
-                while(tempElement!= nullptr){
+        try {
+            if (rows!= columns) throw "No es matriz cuadrada";
+            Matrix<T> *newMatrix = new Matrix<T>(rows, columns);
+            auto tempRow = hRows;
+            auto tempElement = tempRow;
+            for (int i = 0; i < rows; i++) {
+                tempElement = tempRow->next;
+                while (tempElement != nullptr) {
                     newMatrix->set(tempElement->y, i, tempElement->data);
-                    tempElement= tempElement->next;
+                    tempElement = tempElement->next;
                 }
-                tempRow= tempRow->down;
+                tempRow = tempRow->down;
             }
             this->operator=(*newMatrix);
             return *newMatrix;
-        }
-        else{
-            cout << "La matriz no es cuadrada";
-            return *this;
-        }
+        } catch(const char* error){ cout << error << endl; }
     };
 
     Matrix<T>& operator=(Matrix<T>& other){
-        if(rows== other.rows && columns==other.columns) {
+        try
+         {
+            if(rows!= other.rows  || columns!=other.columns) throw "no son compatibles";
             T element;
 
             for (int i = 0; i < rows; i++) {
@@ -292,9 +290,7 @@ public:
 
             }
             return *this;
-        }
-        cout << "Incompatible";
-        return *this;
+        } catch (const char* error) {cout << error << endl;}
     };
 
 
@@ -303,36 +299,15 @@ public:
 
     ~Matrix() {
 
-        auto tempRow= hRows;
-        auto next= tempRow->next;
-        auto tempElement= tempRow;
-
-        for (int i=0; i<rows; i++){
-            tempElement= tempRow->next;
-            while(tempElement!= nullptr){
-                next= next->next;
-                delete tempElement;
-                tempElement= next;
-            }
-            tempRow= tempRow->down;
+        hColumns->killSelf();
+        auto temp= hRows;
+        auto temp2= temp;
+        for (int i=0; i<rows; i++) {
+            temp2= temp;
+            temp= temp->down;
+            temp2->killSelf();
         }
-
-        next= hColumns->next;
-
-        for (int i=0; i<columns; i++){
-            delete hColumns;
-            next= next->next;
-        }
-
-        next= hRows->next;
-
-        for (int i=0; i<rows; i++){
-            delete hRows;
-            hRows= next;
-            next= next->next;
-        }
-
-
+        delete temp;
     };
 
 

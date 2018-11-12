@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/sparse-matrix-SebastianHurtado98.dir/main.cpp.o  -o sparse-matrix-SebastianHurtado98 

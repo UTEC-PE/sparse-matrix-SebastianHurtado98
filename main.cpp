@@ -6,6 +6,7 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
+
     Matrix<int> a(4,4);
     Matrix<int> b(4,4);
     Matrix<int> c(4,4);
@@ -30,6 +31,9 @@ int main(int argc, char *argv[]) {
     d= d.transposed();
     d.printMatrix();
      */
+
+    a.set(4, 4, 5);
+
     a.printMatrix();
     cout << endl;
 
@@ -38,14 +42,9 @@ int main(int argc, char *argv[]) {
         e.set(i,0,1);
     }
     e.printMatrix();
-    e=(a*e);
+    e= (a*e);
     cout << endl;
     e.printMatrix();
-
-
-
-
-
 
     system("PAUSE");
     return EXIT_SUCCESS;
